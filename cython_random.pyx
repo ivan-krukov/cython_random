@@ -4,8 +4,6 @@
 # cython: wraparound=False
 
 from libc.math cimport log, sqrt, cos
-
-cimport numpy as np
 import time
 
 # MT Stuff
@@ -34,6 +32,7 @@ cdef mt_seed(unsigned long long seed):
     mti = NN
 
 
+# Random intiger
 cpdef unsigned long long genrand64():
     cdef int i
     cdef unsigned long long x
@@ -67,8 +66,6 @@ cpdef unsigned long long genrand64():
 
     return x
 
-# Functions
-
 # Seed the random number generator
 cpdef seed_random(unsigned long long seed):
     """
@@ -90,14 +87,12 @@ cpdef double exponential_rv(double Lambda):
     return -1.0/Lambda* log( uniform_rv() )
 
 
-
 cpdef double uniform_rv():
     """
     Generate a uniform random variable in [0,1]
     :return: (double) a random uniform number in [0,1]
     """
     return (genrand64() >> 11) * (1.0/9007199254740991.0)
-
 
 
 cpdef double normal_rv(double mean, double std):
@@ -133,8 +128,8 @@ cpdef double gamma_rv(double k, double theta):
         v = (1+c*x)**3
         UNI = uniform_rv()
         if v > 0 and log(UNI) < 0.5*x**2+d-d*v+d*log(v):
-            return d*v*theta
-
+            break
+    return d*v*theta
 
 cpdef double erlang_rv(double k , double theta):
     """
@@ -169,9 +164,6 @@ cpdef int sample_discrete(int choices, double[:] data, double Lambda):
         i += 1
     return i - 1
 
-# def py_sample_discrete(int choices, np.ndarray[np.double_t,ndim=1] data, double Lambda):
-    # return sample_discrete(choices, <double*> (data.data), Lambda)
-
 
 cpdef double array_sum(double[:] data, int length):
     """
@@ -185,11 +177,6 @@ cpdef double array_sum(double[:] data, int length):
     for i in range(length):
         answer += data[i]
     return answer
-
-
-# def py_array_sum(np.ndarray[np.double_t,ndim=1] data, int length):
-    # return array_sum(<double*> data.data, length)
-
 
 
 cpdef unsigned binom_rnd(unsigned n, double p):
@@ -206,9 +193,6 @@ cpdef unsigned binom_rnd(unsigned n, double p):
             answer += 1
 
     return answer
-
-# def py_binom_rnd(unsigned n, double p):
-#     return binom_rnd(n,p)
 
 
 cpdef unsigned binom_rnd_f(double N, double p):
@@ -227,10 +211,6 @@ cpdef unsigned binom_rnd_f(double N, double p):
 
     return answer
 
-# def py_binom_rnd_f(double N, double p):
-#     return  binom_rnd_f( N,  p)
-
-
 
 cpdef unsigned approx_binom_rnd(unsigned n, double p):
     """
@@ -241,11 +221,6 @@ cpdef unsigned approx_binom_rnd(unsigned n, double p):
     """
     return int( normal_rv( n*p , sqrt(n*p*(1-p))  ) + 0.5 )
 
-# def py_approx_binom_rnd(unsigned n, double p):
-#     return approx_binom_rnd(n,p)
-
-
-
 
 cpdef unsigned approx_binom_rnd_f(double n, double p):
     """
@@ -255,6 +230,3 @@ cpdef unsigned approx_binom_rnd_f(double n, double p):
     :return: (unsigned) random number sample.
     """
     return int( normal_rv( n*p , sqrt(n*p*(1-p))  ) + 0.5 )
-
-# def py_approx_binom_rnd_f(double n, double p):
-#     return approx_binom_rnd_f(n,p)

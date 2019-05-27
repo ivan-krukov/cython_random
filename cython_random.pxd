@@ -1,6 +1,6 @@
+# cython: language_level=3
 from libc.math cimport log, sqrt, cos
 
-cimport numpy as np
 
 cpdef unsigned long long genrand64()
 cpdef seed_random(unsigned long long seed)
